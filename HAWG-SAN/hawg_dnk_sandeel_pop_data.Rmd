@@ -1,0 +1,145 @@
+---
+title: "hawg_dnk_sandeel_pop_data"
+author: "Kirsten Birch Håkansson, DTU Aqua"
+date: /today
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(haven)
+library(dplyr)
+library(lubridate)
+
+knitr::opts_chunk$set(echo = TRUE)
+
+# log_years <- c(1982:1986)
+dfad_years <- c(2023:2024)
+
+path_log <- "Q:/20-forskning/20-dfad/data/Data/logdata/"
+path_dfad <- "Q:/20-forskning/20-dfad/data/Data/udvidet_data/"
+path_out <- "Q:/50-radgivning/02-mynd/Assessement_discard_and_the_like/national_AWG_BM_submissions/2026_all_RDBES_DK/HAWG-SAN/"
+  
+```
+
+```{r}
+
+# log <- c()
+# 
+# for(i in log_years) {
+# 
+# 
+#   log_0 <- read_sas(paste0(path_log, "log", substr(i, 3, 4), ".sas7bdat"))
+#   names(log_0) <- tolower(names(log_0))
+# 
+#   log <- bind_rows(log, log_0)
+# }
+# 
+# log_1 <- subset(log, art %in% c("TBS", "ABZ") & fnat == "DNK")
+# 
+# log_2 <- mutate(log_1, vesselFlagCountry  = "DK", 	year = year(ldato),
+#                 month = month(ldato), area = fvd, 	statisticalRectangle = paste0(isb, isl),
+#                 dataSourceOfStatisticalRectangle = "logbook", exclusiveEconomicZone = zone,
+#                 source = "logbook", update = Sys.Date()
+# )
+# 
+# log_sum <- summarise(group_by(log_2, vesselFlagCountry, year, month, area,
+#                               statisticalRectangle, dataSourceOfStatisticalRectangle,
+#                               exclusiveEconomicZone, source, update
+# ), weight = sum(fangst, na.rm = T))
+# 
+
+dfad <- c()
+
+for(i in dfad_years) {
+
+
+  dfad_0 <- readRDS(paste0(path_dfad, "dfad_udvidet", i, ".rds"))
+  names(dfad_0) <- tolower(names(dfad_0))
+
+  dfad_0 <- subset(dfad_0, art %in% c("TBS", "ABZ"))
+
+  dfad_0 <- select(dfad_0, -aktiv, -passiv)
+
+  dfad <- bind_rows(dfad, dfad_0)
+
+  print(i)
+}
+
+dfad_2 <- mutate(dfad, vesselFlagCountry  = "DK", 	year = year(ldato),
+                month = month(ldato), area = dfadfvd_ret, 	statisticalRectangle = square_ret,
+                dataSourceOfStatisticalRectangle = square_ret_mrk, exclusiveEconomicZone = zone,
+                source = "DFAD", update = Sys.Date(), afrfvd, fvd, dfadfvd_mrk, fao_area
+)
+
+dfad_sum <- summarise(group_by(dfad_2, vesselFlagCountry, year, month, area,
+                              statisticalRectangle, dataSourceOfStatisticalRectangle,
+                              exclusiveEconomicZone, source, update, afrfvd, fvd, dfadfvd_mrk, fao_area
+), weight = sum(hel, na.rm = T))
+
+pop <- dfad_sum   #bind_rows(log_sum, dfad_sum)
+
+saveRDS(pop, paste0(path_out, "pop_data.rds"))
+
+dat <- readRDS(paste0(path_out, "pop_data.rds"))
+
+unique((dat$year))
+
+```
+
+```{r}
+# 
+# 
+# log_sum_1 <- log_sum <- summarise(group_by(log_2, vesselFlagCountry, year, fvd
+# ), weight = sum(fangst, na.rm = T))
+# 
+# old <- read_sas("Q:/50-radgivning/02-mynd/Assessement_discard_and_the_like/assessment_scripts/HAWG_sandeel/debugging_scripts_2022/1_no_changes/cpue_2017.sas7bdat")
+# 
+# old$statisticalRectangle <- old$ICES_txt
+# 
+# old_sum <- summarise(group_by(old, year, fvd), kg = sum(yield, na.rm = T))
+# 
+# compare <- full_join(log_sum_1, old_sum)
+
+```
+
+```{r}
+
+unique(dat$area[is.na(dat$fao_area)])
+
+dat$fao_area[is.na(dat$fao_area) & dat$area == "3AN"] <- "27.3.a.20"
+dat$fao_area[is.na(dat$fao_area) & dat$area == "3AS"] <- "27.3.a.21"
+dat$fao_area[is.na(dat$fao_area) & dat$area == "3C"] <- "27.3.c.22"
+dat$fao_area[is.na(dat$fao_area) & dat$area == "3D"] <- "27.3.d"
+dat$fao_area[is.na(dat$fao_area) & dat$area == "4A"] <- "27.4.a"
+dat$fao_area[is.na(dat$fao_area) & dat$area == "4B"] <- "27.4.b"
+dat$fao_area[is.na(dat$fao_area) & dat$area == "4C"] <- "27.4.c"
+
+dat_1 <- subset(dat, !(area %in% c("3D")))
+
+dat_1$area <- dat_1$fao_area
+
+unique(dat_1$dataSourceOfStatisticalRectangle)
+
+dat_2 <- dat_1 #subset(dat_1, !(dataSourceOfStatisticalRectangle %in% c("Harbour >=12", "Harbour <12", "Harbour default")))
+
+
+unique(dat_2$dataSourceOfStatisticalRectangle)
+
+table_1 <- summarise(group_by(dat_2, vesselFlagCountry, year, month, area,
+                              statisticalRectangle, exclusiveEconomicZone
+), weight = sum(weight, na.rm = T))
+
+write.csv(table_1, paste0(path_out, "Annex_1_HAWG_sandeel_exchange_format_DNK.csv"), row.names = F)
+
+```
+
+```{r, eval = F}
+
+dat_2007 <- subset(dat, year == 2007)
+
+unique(dat$dataSourceOfStatisticalRectangle)
+
+sum_source <- summarise(group_by(dat, dataSourceOfStatisticalRectangle), weight = sum(weight, na.rm = T))
+
+```
+
