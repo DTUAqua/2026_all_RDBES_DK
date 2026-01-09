@@ -13,7 +13,7 @@ library(lubridate)
 knitr::opts_chunk$set(echo = TRUE)
 
 # log_years <- c(1982:1986)
-dfad_years <- c(2023:2024)
+dfad_years <- c(2024:2025)
 
 path_log <- "Q:/20-forskning/20-dfad/data/Data/logdata/"
 path_dfad <- "Q:/20-forskning/20-dfad/data/Data/udvidet_data/"
