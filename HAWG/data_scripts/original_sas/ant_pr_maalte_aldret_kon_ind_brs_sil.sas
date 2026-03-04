@@ -2,7 +2,12 @@ options nocenter label missing=' ' pagesize=70 linesize=120;
 
 %let prg_navn=ant_pr_maalte_aldret_kon_ind_brs_sil.sas;
 
-%let aar=%str(2024);
+%let path_repo = C:\Users\kibi\OneDrive - Danmarks Tekniske Universitet\2026_all_RDBES_DK;
+%let awg = HAWG;
+libname out "&path_repo.\&awg.\data\original_sas";
+%let path_out = &path_repo.\&awg.\data\original_sas;
+
+%let aar=%str(2025);
 
 *libname spr '\\hfi01\sasdata\hawg\wg2007\data';
 *libname spr '\\ch-fil01\sasdata\hawg\wg2009\data';
@@ -42,7 +47,7 @@ FROM         dbo.SpeciesList sp INNER JOIN
 WHERE     (sp.[year]  in (&aar.)) AND (sp.speciesCode = N'sil' OR
                       sp.speciesCode = N'brs') AND (sp.cruise = N'in-hirt' OR
                       sp.cruise = N'in-lyng' OR  sp.cruise = N'in-3 part' OR 
-					  sp.cruise = N'in-fisker' OR sp.cruise = N'tbm23' OR sp.cruise = N'tbm24' OR
+					  sp.cruise = N'in-fisker' OR sp.cruise = N'tbm23' OR sp.cruise = N'tbm24' OR sp.cruise = N'tbm25' OR
 					  sp.cruise = N'brs13' OR sp.cruise = N'brs14' OR 
 					  sp.cruise = N'brs15' OR sp.cruise = N'brs16' OR sp.cruise = N'brs17' OR sp.cruise = N'brs18' OR sp.cruise = N'brs19' OR
 					  sp.cruise = N'brs20' OR sp.cruise = N'brs21' OR sp.cruise = N'gudp-vind')
@@ -152,6 +157,6 @@ data tford; merge mford(in=aa) aford(in=bb); by aar togt tur stat art kat;
 pr=1;
 
 PROC EXPORT DATA= tford
-            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\bio_statistik_sil_brs_per_sample_&aar._&sysdate..csv" 
+            OUTFILE= "&path_out.\bio_statistik_sil_brs_per_sample_&aar._&sysdate..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
