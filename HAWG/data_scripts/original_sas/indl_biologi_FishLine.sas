@@ -2,9 +2,9 @@ options nocenter label missing=' ' pagesize=70 linesize=120;
 
 %let prg_navn=indl_biologi.sas;
 
-libname spr 'Q:\mynd\Assessement_discard_and_the_like\WG\HAWG\wg2024\HAWGOutput\SASData';
+libname spr 'Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\SASData';
 
-%let aar=2023;
+%let aar=2024;
 
 proc format;
 value $om
@@ -55,6 +55,7 @@ run;
 data silbrs;
 set silbrs1;
 if ald>70 then ald=.;
+
 if otolithReadingRemark = 'D' then ald = .;
 if aar=2017 and togt='GUDP-VIND' and stat in ('402','404','405') then delete;
 
@@ -70,16 +71,6 @@ if weight=' ' then delete;
 if aar = 2022 and stat in ('1410', '1411', '1412', '1413', '1414', '1415') then kat0 = 'KON';
 
 kat=kat0;
-if dfuarea in ('22','23','24','25','26','27','28','29','30','31','32') and art='SIL' then do; kat='KONIND'; area=dfuarea; end;
-
-if kat = 'KONIND' and dfuarea in ('22','23','24') then do;
-	if rdsk in ('OTM','PTM') then kat = 'Active';
-	if rdsk in ('GNS') then kat = 'Passive';
-	if rdsk in ('FPN') then kat = 'Passive';
-end;
-
-if art='BRS' and kat='KON' then kat='IND';
-
 
 if substr(area,1,1) in ('4') and kat='KON' and art='SIL' then do;
   if 43<a<53 and 55<b<62 then area='4aw';
@@ -110,6 +101,28 @@ end;
 * 20240309 - in 2023 we have some samples from the 90-119 fishery. We have never sampled these fisheries for SIL KON - only discard;
 
 if kat='KON' and art='SIL' and maske >69 then kat = 'NEP';
+run;
+
+
+data sbr;
+set sbr;
+
+
+if kat='KON' and art='SIL' and maske >69 then kat = 'NEP';
+
+if art = 'SIL' and dfuarea in ('20','21','22','23','24') then do;
+	if rdsk in ('PS') then kat = 'PS';
+	if rdsk in ('OTM','PTM','SSC','OTB','SDN') and 
+		maske <32 then kat = 'Active<32';
+	if rdsk in ('OTM','PTM','SSC','OTB','SDN') and 
+		maske >=32 
+			then kat = 'Active>=32';
+	if rdsk in ('GNS','FPN') then kat = 'Passive';
+end;
+
+if dfuarea in ('25','26','27','28','29','30','31','32') and art='SIL' then do; kat='KONIND'; end;
+if art='BRS' then do; kat='IND'; end;
+
 run;
 
 data an; set sbr;
@@ -437,6 +450,31 @@ if aar=2023 and area='3as' and art='SIL' and kat='KON' and kv=1 and lgdcm=12 the
   lgdcm=11; manual_imp = 'yes'; output;
 end;
 
+* 2024;
+if aar=2024 and area='4aw' and art='SIL' and kat='KON' and kv=4 and lgdcm=21 then do;
+  lgdcm=20; manual_imp = 'yes'; output;
+end;
+if aar=2024 and area='4aw' and art='SIL' and kat='KON' and kv=4 and lgdcm=31 then do;
+  lgdcm=32; manual_imp = 'yes'; output;
+  lgdcm=34; manual_imp = 'yes'; output;
+end;
+if aar=2024 and area='4b' and art='SIL' and kat='IND' and kv=3 and lgdcm=14 then do;
+  lgdcm=15; manual_imp = 'yes'; output;
+end;
+if aar=2024 and area='4b' and art='SIL' and kat='KON' and kv=3 and lgdcm=23 then do;
+  lgdcm=22; manual_imp = 'yes'; output;
+end;
+if aar=2024 and area='4b' and art='SIL' and kat='KON' and kv=4 and lgdcm=30 then do;
+  lgdcm=31; manual_imp = 'yes'; output;
+end;
+
+if aar=2024 and area='29' and art='BRS' and kat='IND' and kv=4 and lgdcm=8 then do;
+  lgdcm=9; manual_imp = 'yes'; output;
+end;
+if aar=2024 and area='25' and art='SIL' and kat='KONIND' and kv=1 and lgdcm=21 then do;
+  lgdcm=22; manual_imp = 'yes'; output;
+end;
+
 proc sort data=an2; by aar area kv kat art lgdcm;
 run;
 
@@ -621,15 +659,15 @@ set final;
 run;
 
 PROC EXPORT DATA= WORK.final
-            OUTFILE= "Q:\mynd\Assessement_discard_and_the_like\WG\HAWG\wg2024\HAWGOutput\CANUM_&aar..csv" 
+            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\CANUM_&aar..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
 PROC EXPORT DATA= WORK.lan
-            OUTFILE= "Q:\mynd\Assessement_discard_and_the_like\WG\HAWG\wg2024\HAWGOutput\Landings_&aar..csv" 
+            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\Landings_&aar..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
 PROC EXPORT DATA= WORK.sampling
-            OUTFILE= "Q:\mynd\Assessement_discard_and_the_like\WG\HAWG\wg2024\HAWGOutput\sampling_&aar..csv" 
+            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\sampling_&aar..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
 
@@ -667,6 +705,6 @@ stk_l_1000000=(ld*stkkg*kg)/1000000;
 run;
 
 PROC EXPORT DATA= WORK.final_ld
-            OUTFILE= "Q:\mynd\Assessement_discard_and_the_like\WG\HAWG\wg2024\HAWGOutput\LD_&aar..csv" 
+            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\LD_&aar..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
