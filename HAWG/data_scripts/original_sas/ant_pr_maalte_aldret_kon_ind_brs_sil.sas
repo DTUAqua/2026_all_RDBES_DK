@@ -2,7 +2,7 @@ options nocenter label missing=' ' pagesize=70 linesize=120;
 
 %let prg_navn=ant_pr_maalte_aldret_kon_ind_brs_sil.sas;
 
-%let aar=%str(2023);
+%let aar=%str(2024);
 
 *libname spr '\\hfi01\sasdata\hawg\wg2007\data';
 *libname spr '\\ch-fil01\sasdata\hawg\wg2009\data';
@@ -33,7 +33,7 @@ select *,
        input(substr(intsq,1,2),2.0) as a
 from connection to odbc
 (SELECT     sp.[year] AS aar, sp.dateGearStart as rdsk_sat, sp.cruise AS togt, sp.trip AS tur, sp.tripType AS type, sp.station AS stat, sp.dfuArea, 
-                      sp.statisticalRectangle AS intsq, sp.gearType AS rdsk, sp.meshSize AS maske, sp.speciesCode AS art, sp.landingCategory AS kat, 
+                      sp.statisticalRectangle AS intsq, sp.gearType AS rdsk, sp.meshSize AS maske, sp.speciesCode AS art, sp.landingCategory AS kat_db, 
                       sp.dfuBase_Category, sp.treatment AS bhgr, sp.raisingFactor AS gf, a.representative AS rep, a.length AS lgd, a.lengthMeasureUnit AS enh, 
                       a.number AS ant, a.weight, ag.length AS a_lgd, ag.age AS ald, ag.number AS aant
 FROM         dbo.SpeciesList sp INNER JOIN
@@ -41,7 +41,9 @@ FROM         dbo.SpeciesList sp INNER JOIN
                       dbo.Age ag ON a.animalId = ag.animalId
 WHERE     (sp.[year]  in (&aar.)) AND (sp.speciesCode = N'sil' OR
                       sp.speciesCode = N'brs') AND (sp.cruise = N'in-hirt' OR
-                      sp.cruise = N'in-lyng' OR sp.cruise = N'brs13' OR sp.cruise = N'brs14' OR sp.cruise = N'in-3 part' OR sp.cruise = N'in-fisker' OR
+                      sp.cruise = N'in-lyng' OR  sp.cruise = N'in-3 part' OR 
+					  sp.cruise = N'in-fisker' OR sp.cruise = N'tbm23' OR sp.cruise = N'tbm24' OR
+					  sp.cruise = N'brs13' OR sp.cruise = N'brs14' OR 
 					  sp.cruise = N'brs15' OR sp.cruise = N'brs16' OR sp.cruise = N'brs17' OR sp.cruise = N'brs18' OR sp.cruise = N'brs19' OR
 					  sp.cruise = N'brs20' OR sp.cruise = N'brs21' OR sp.cruise = N'gudp-vind')
 					  );
@@ -56,6 +58,9 @@ if aar=2017 and togt='GUDP-VIND' and stat in ('402','404','405') then delete;
 run;
 
 data sbr; set silbrs(where=(area ne 'UU'));
+length kat $10.;
+
+kat = kat_db;
 
 if aar=2013 and stat='408' then do; a=49; b=61; intsq='49F1'; end;
 if art='BRS' and kat='KON' then kat='IND';
@@ -87,8 +92,25 @@ end;
 
 * 20240309 - in 2023 we have some samples from the 90-119 fishery. We have never sampled these fisheries for SIL KON - only discard;
 
+run;
+
+data sbr;
+set sbr;
+
+
 if kat='KON' and art='SIL' and maske >69 then kat = 'NEP';
 
+if art = 'SIL' and dfuarea in ('20','21','22','23','24') then do;
+	if rdsk in ('PS') then kat = 'PS';
+	if rdsk in ('OTM','PTM','SSC','OTB','SDN') and 
+		maske <32 then kat = 'Active<32';
+	if rdsk in ('OTM','PTM','SSC','OTB','SDN') and 
+		maske >=32 
+			then kat = 'Active>=32';
+	if rdsk in ('GNS','FPN') then kat = 'Passive';
+end;
+
+if dfuarea in ('25','26','27','28','29','30','31','32') and art='SIL' then do; kat='KONIND'; end;
 
 run;
 proc summary nway data=sbr missing;
@@ -130,6 +152,6 @@ data tford; merge mford(in=aa) aford(in=bb); by aar togt tur stat art kat;
 pr=1;
 
 PROC EXPORT DATA= tford
-            OUTFILE= "Q:\mynd\Assessement_discard_and_the_like\WG\HAWG\wg2024\HAWGOutput\bio_statistik_sil_brs_per_sample_&aar._&sysdate..csv" 
+            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\bio_statistik_sil_brs_per_sample_&aar._&sysdate..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
