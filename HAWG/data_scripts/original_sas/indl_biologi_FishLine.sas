@@ -2,9 +2,12 @@ options nocenter label missing=' ' pagesize=70 linesize=120;
 
 %let prg_navn=indl_biologi.sas;
 
-libname spr 'Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\SASData';
+%let path_repo = C:\Users\kibi\OneDrive - Danmarks Tekniske Universitet\2026_all_RDBES_DK;
+%let awg = HAWG;
+libname spr "&path_repo.\&awg.\data\original_sas";
+%let path_out = &path_repo.\&awg.\data\original_sas;
 
-%let aar=2024;
+%let aar=2025;
 
 proc format;
 value $om
@@ -475,6 +478,15 @@ if aar=2024 and area='25' and art='SIL' and kat='KONIND' and kv=1 and lgdcm=21 t
   lgdcm=22; manual_imp = 'yes'; output;
 end;
 
+
+* 2025;
+if aar=2025 and area='4b' and art='SIL' and kat='IND' and kv=3 and lgdcm=10 then do;
+  kat='KON'; kv=2; manual_imp = 'yes'; output;
+end;
+if aar=2025 and area='4b' and art='SIL' and kat='IND' and kv=3 and lgdcm=11 then do;
+  kat='KON'; kv=2; manual_imp = 'yes'; output;
+end;
+
 proc sort data=an2; by aar area kv kat art lgdcm;
 run;
 
@@ -659,15 +671,15 @@ set final;
 run;
 
 PROC EXPORT DATA= WORK.final
-            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\CANUM_&aar..csv" 
+            OUTFILE= "&path_out.\CANUM_&aar..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
 PROC EXPORT DATA= WORK.lan
-            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\Landings_&aar..csv" 
+            OUTFILE= "&path_out.\Landings_&aar..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
 PROC EXPORT DATA= WORK.sampling
-            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\sampling_&aar..csv" 
+            OUTFILE= "&path_out.\sampling_&aar..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
 
@@ -705,6 +717,6 @@ stk_l_1000000=(ld*stkkg*kg)/1000000;
 run;
 
 PROC EXPORT DATA= WORK.final_ld
-            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\LD_&aar..csv" 
+            OUTFILE= "&path_out.\LD_&aar..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
