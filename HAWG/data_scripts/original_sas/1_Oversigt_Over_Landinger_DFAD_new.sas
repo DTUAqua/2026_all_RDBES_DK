@@ -15,7 +15,6 @@ libname out "&path_repo.\&awg.\data\original_sas";
 %let path_out = &path_repo.\&awg.\data\original_sas;
 
 %let year=2025;
-
 *Fordeling af uoplyste square;
 data data0;
 set temp.dfad_udvidet&year.;
@@ -26,6 +25,8 @@ if match ne '' then match_alle=match;
 else match_alle=compress(fid||'_'||put(ldato,yymmdd6.));
 
 if dfadfvd_ret in ('3D282','3D281') then dfadfvd_ret='3D28';
+
+if ltilst="Z" and sort='9' then delete; *BMS landings in DFADet not complete so delete; *20250319 inserted;
 
 *rectangle_original=isb!!isl;
 rectangle_original=square_ret;
@@ -127,19 +128,23 @@ data data6;
 set data5;
 length kategori $10. maske_num $12.;
 
-if target in("BLH","BRS","HMK","KRI","LSS","LOD","PIL","SPE","TBS","ARG","SKO","GUK","HAG") 
+if target in("BLH","BRS","HMK","KRI","LSS","LOD","PIL","SPE","TBS","ARG","SKO","GUK","HAG","ANS") 
 and (ltilst in ('I') or (ltilst in ('X','U') and anvend in ('F','I'))) then kategori='IND'; 
 *else if ihovedart ne ' ' then kategori='IND'; 
 else if bms='yes' then kategori='BMS';
-else if match_alle in ('0004399971','0004413401') then kategori='KON';
 else kategori='KON';
 
-/*
 maske_num = maske*1;
 
-if maske not in (., 0) and maske >= 32 then kategori='KON';
-if maske not in (., 0) and maske <32 then kategori = 'IND';
-*/
+if art = 'SIL' then do;
+
+	if maske_num not in (., 0) and maske_num <32 then kategori = 'IND';
+end;
+
+if match_alle in ('0004399971','0004413401') then kategori='KON';
+
+if substr(dfadfvd_ret, 1, 1) = '7'  then kategori='KON';
+
 run;
 
 proc sql;
@@ -226,9 +231,16 @@ new_area=ff_area;
 
 if new_area in ('22','23','24','25','26','27','28','29','30','31','32') and art='SIL' then do; kategori='KONIND'; end;
 
-if kategori = 'KONIND' and new_area in ('22','23','24') then do;
-	if substr(metier_level6_ret, 1, 3) in ('OTM','PTM','SSC','OTB') then kategori = 'Active';
-	if substr(metier_level6_ret, 1, 3) in ('GNS','FPN','No_') then kategori = 'Passive';
+if art = 'SIL' and new_area in ('3an','3as','3ai','22','23','24') then do;
+	if substr(metier_level6_ret, 1, 3) in ('PS_') then kategori = 'PS';
+	if substr(metier_level6_ret, 1, 4) in ('OTM_','PTM_','SSC_','OTB_','SDN_', 'No_M') and 
+		maske_num not in (., 0) and 
+		maske_num <32 then kategori = 'Active<32';
+	if substr(metier_level6_ret, 1, 4) in ('OTM_','PTM_','SSC_','OTB_','SDN_', 'No_M') and 
+		maske_num not in (., 0) and 
+		maske_num >=32 or metier_level6_ret in ('OTB_CRU_90-119_0_0','OTB_DEF_90-119_0_0')
+			then kategori = 'Active>=32';
+	if substr(metier_level6_ret, 1, 4) in ('GNS_','FPN_','No_l') then kategori = 'Passive';
 end;
 
 run;
@@ -250,12 +262,12 @@ run;
 
 proc sql;
 create table data8 as
-select TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend, maske, metier_level6_ret, ff_area, square_ret_mrk, square, new_square, new_area, dfadfvd, dfadfvd_ret, transfer_4, sum(hel)/1000 as Ton
+select TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend, redskb, maske, metier_level6_ret, metier_level_6_new, ob, ff_area, square_ret_mrk, square, new_square, new_area, dfadfvd, dfadfvd_ret, transfer_4, sum(hel)/1000 as Ton
 from data7
-group by TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend, maske, metier_level6_ret, ff_area, square_ret_mrk, square, new_square, new_area, dfadfvd, dfadfvd_ret, transfer_4;
+group by TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend, redskb, maske, metier_level6_ret, metier_level_6_new, ob, ff_area, square_ret_mrk, square, new_square, new_area, dfadfvd, dfadfvd_ret, transfer_4;
 
 	PROC EXPORT DATA= WORK.data8
-	            OUTFILE= "&path_out.\Landings_FD_PerTrip_new_&year._&sysdate..csv" 
+	            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\Landings_FD_PerTrip_new_&year._&sysdate..csv" 
 	            DBMS=CSV LABEL REPLACE;
 	RUN;
 
