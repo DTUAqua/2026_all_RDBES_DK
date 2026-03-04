@@ -142,6 +142,7 @@ maske_num = maske*1;
 if art = 'SIL' then do;
 
 	if maske_num not in (., 0) and maske_num <32 then kategori = 'IND';
+	if maske_num not in (., 0) and maske_num >=32 then kategori = 'KON';
 end;
 
 if match_alle in ('0004399971','0004413401') then kategori='KON';
@@ -236,10 +237,10 @@ if new_area in ('22','23','24','25','26','27','28','29','30','31','32') and art=
 
 if art = 'SIL' and new_area in ('3an','3as','3ai','22','23','24') then do;
 	if substr(metier_level6_ret, 1, 3) in ('PS_') then kategori = 'PS';
-	if substr(metier_level6_ret, 1, 4) in ('OTM_','PTM_','SSC_','OTB_','SDN_', 'No_M') and 
+	if substr(metier_level6_ret, 1, 4) in ('OTM_','PTM_','SSC_','OTB_','PTB_','SDN_', 'No_M') and 
 		maske_num not in (., 0) and 
 		maske_num <32 then kategori = 'Active<32';
-	if substr(metier_level6_ret, 1, 4) in ('OTM_','PTM_','SSC_','OTB_','SDN_', 'No_M') and 
+	if substr(metier_level6_ret, 1, 4) in ('OTM_','PTM_','SSC_','OTB_','PTB_','SDN_', 'No_M') and 
 		maske_num not in (., 0) and 
 		maske_num >=32 or metier_level6_ret in ('OTB_CRU_90-119_0_0','OTB_DEF_90-119_0_0')
 			then kategori = 'Active>=32';
@@ -265,9 +266,9 @@ run;
 
 proc sql;
 create table data8 as
-select TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend, redskb, maske, metier_level6_ret, metier_level_6_new, ob, ff_area, square_ret_mrk, square, new_square, new_area, dfadfvd, dfadfvd_ret, transfer_4, sum(hel)/1000 as Ton
+select TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend, redskb, maske, metier_level6_ret, metier_level_6_new, metier_level_6_new_mrk, ob, ff_area, square_ret_mrk, square, new_square, new_area, dfadfvd, dfadfvd_ret, transfer_4, sum(hel)/1000 as Ton
 from data7
-group by TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend, redskb, maske, metier_level6_ret, metier_level_6_new, ob, ff_area, square_ret_mrk, square, new_square, new_area, dfadfvd, dfadfvd_ret, transfer_4;
+group by TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend, redskb, maske, metier_level6_ret, metier_level_6_new, metier_level_6_new_mrk, ob, ff_area, square_ret_mrk, square, new_square, new_area, dfadfvd, dfadfvd_ret, transfer_4;
 
 PROC EXPORT DATA= WORK.data8
             OUTFILE= "&path_out.\Landings_FD_PerTrip_new_&year._&sysdate..csv" 
@@ -298,7 +299,7 @@ run;
 	run;
 
 	PROC IMPORT OUT= WORK.wgsquare 
-	            DATAFILE= "&path_out.\WGSquare_HAWG.csv" 
+	            DATAFILE= "&path_square.\WGSquare_HAWG.csv" 
 	            DBMS=DLM REPLACE;
 	     DELIMITER='3B'x; 
 	     GETNAMES=YES;
