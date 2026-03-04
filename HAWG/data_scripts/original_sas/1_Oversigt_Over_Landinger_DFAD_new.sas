@@ -13,8 +13,11 @@ libname library 'Q:\50-radgivning\02-mynd\Formater\Formater_94';
 %let awg = HAWG;
 libname out "&path_repo.\&awg.\data\original_sas";
 %let path_out = &path_repo.\&awg.\data\original_sas;
+%let path_square = &path_repo.\&awg.\boot\data\template_square_list;
 
 %let year=2025;
+
+
 *Fordeling af uoplyste square;
 data data0;
 set temp.dfad_udvidet&year.;
@@ -266,14 +269,14 @@ select TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend, r
 from data7
 group by TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend, redskb, maske, metier_level6_ret, metier_level_6_new, ob, ff_area, square_ret_mrk, square, new_square, new_area, dfadfvd, dfadfvd_ret, transfer_4;
 
-	PROC EXPORT DATA= WORK.data8
-	            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\Landings_FD_PerTrip_new_&year._&sysdate..csv" 
-	            DBMS=CSV LABEL REPLACE;
-	RUN;
+PROC EXPORT DATA= WORK.data8
+            OUTFILE= "&path_out.\Landings_FD_PerTrip_new_&year._&sysdate..csv" 
+            DBMS=CSV LABEL REPLACE;
+RUN;
 
-	data out.lan_&year.;
-	set data8;
-	run;
+data out.lan_&year.;
+set data8;
+run;
 
 	proc sql;
 	create table areas as 
