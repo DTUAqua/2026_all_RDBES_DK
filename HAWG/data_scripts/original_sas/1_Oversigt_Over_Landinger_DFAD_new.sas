@@ -5,13 +5,16 @@
 options missing='';
 
 *temp indeholder udvidet DFAD med level 6 sat på;
-libname temp 'Q:\dfad\data\Data\udvidet_data';
-libname lplads 'Q:\mynd\SAS Library\Lplads';
-libname library 'Q:\mynd\Formater\Formater_94';
-libname out 'Q:\mynd\Assessement_discard_and_the_like\WG\HAWG\wg2024\HAWGOutput\SASData';
+libname temp 'Q:\20-forskning\20-dfad\data\Data\udvidet_data';
+libname lplads 'Q:\50-radgivning\02-mynd\SAS Library\Lplads';
+libname library 'Q:\50-radgivning\02-mynd\Formater\Formater_94';
 
+%let path_repo = C:\Users\kibi\OneDrive - Danmarks Tekniske Universitet\2026_all_RDBES_DK;
+%let awg = HAWG;
+libname out "&path_repo.\&awg.\data\original_sas";
+%let path_out = &path_repo.\&awg.\data\original_sas;
 
-%let year=2023;
+%let year=2025;
 
 *Fordeling af uoplyste square;
 data data0;
@@ -252,7 +255,7 @@ from data7
 group by TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend, maske, metier_level6_ret, ff_area, square_ret_mrk, square, new_square, new_area, dfadfvd, dfadfvd_ret, transfer_4;
 
 	PROC EXPORT DATA= WORK.data8
-	            OUTFILE= "Q:\mynd\Assessement_discard_and_the_like\WG\HAWG\wg2024\HAWGOutput\Landings_FD_PerTrip_new_&year._&sysdate..csv" 
+	            OUTFILE= "&path_out.\Landings_FD_PerTrip_new_&year._&sysdate..csv" 
 	            DBMS=CSV LABEL REPLACE;
 	RUN;
 
@@ -280,7 +283,7 @@ group by TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend,
 	run;
 
 	PROC IMPORT OUT= WORK.wgsquare 
-	            DATAFILE= "Q:\mynd\Assessement_discard_and_the_like\Input\YellowSheetCodes\WGSquare_HAWG.csv" 
+	            DATAFILE= "&path_out.\WGSquare_HAWG.csv" 
 	            DBMS=DLM REPLACE;
 	     DELIMITER='3B'x; 
 	     GETNAMES=YES;
@@ -300,7 +303,7 @@ group by TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend,
 	order by rect_2024;
 
 	PROC EXPORT DATA= WORK.land3
-	            OUTFILE= "Q:\mynd\Assessement_discard_and_the_like\WG\HAWG\wg2024\HAWGOutput\Landings_pr_square_2024_&year..csv" 
+	            OUTFILE= "&path_out.\Landings_pr_square_2024_&year..csv" 
 	            DBMS=csv REPLACE;
 	RUN;
 
@@ -326,7 +329,7 @@ group by TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend,
 	order by rect;
 
 	PROC EXPORT DATA= WORK.land3a
-	            OUTFILE= "Q:\mynd\Assessement_discard_and_the_like\WG\HAWG\wg2024\HAWGOutput\Landings_pr_square_subkategori_&year..csv" 
+	            OUTFILE= "&path_out.\Landings_pr_square_subkategori_&year..csv" 
 	            DBMS=csv REPLACE;
 	RUN;
 
@@ -352,6 +355,6 @@ group by TripNo, Year, quarter, month, art, kategori, ihovedart, ltilst, anvend,
 	order by rect_trans;
 
 	PROC EXPORT DATA= WORK.land3b
-	            OUTFILE= "Q:\mynd\Assessement_discard_and_the_like\WG\HAWG\wg2024\HAWGOutput\Landings_pr_square_subkategori_transfer_&year..csv" 
+	            OUTFILE= "&path_out.\Landings_pr_square_subkategori_transfer_&year..csv" 
 	            DBMS=csv REPLACE;
 	RUN;
