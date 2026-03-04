@@ -5,8 +5,12 @@
 /boot/data
 /boot/library
 /boot/software
+/boot/initial
 /data
 /model
 /output
 /report
 *.Rproj
+*.png
+*.docx
+*.html
