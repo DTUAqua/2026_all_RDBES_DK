@@ -2,9 +2,12 @@ options nocenter label missing=' ' pagesize=70 linesize=120;
 
 %let prg_navn=indl_biologi.sas;
 
-libname spr 'Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\SASData';
+%let path_repo = C:\Users\kibi\OneDrive - Danmarks Tekniske Universitet\2026_all_RDBES_DK;
+%let awg = HAWG;
+libname spr "&path_repo.\&awg.\data\original_sas";
+%let path_out = &path_repo.\&awg.\data\original_sas;
 
-%let aar=2024;
+%let aar=2025;
 
 proc format;
 value $om
@@ -490,6 +493,14 @@ if aar=2024 and area='4b' and art='SIL' and kat='KON' and kv=4 and lgdcm=30 then
   lgdcm=31; manual_imp = 'yes'; output;
 end;
 
+* 2025;
+if aar=2025 and area='4b' and art='SIL' and kat='IND' and kv=3 and lgdcm=10 then do;
+  kat='KON'; kv=2; manual_imp = 'yes'; output;
+end;
+if aar=2025 and area='4b' and art='SIL' and kat='IND' and kv=3 and lgdcm=11 then do;
+  kat='KON'; kv=2; manual_imp = 'yes'; output;
+end;
+
 proc sort data=an2; by aar area kv kat art lgdcm;
 run;
 
@@ -688,15 +699,15 @@ set final;
 run;
 
 PROC EXPORT DATA= WORK.final
-            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\CANUM_trans_&aar..csv" 
+            OUTFILE= "&path_out.\CANUM_trans_&aar..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
 PROC EXPORT DATA= WORK.lan
-            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\Landings_trans_&aar..csv" 
+            OUTFILE= "&path_out.\Landings_trans_&aar..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
 PROC EXPORT DATA= WORK.sampling
-            OUTFILE= "Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\sampling_trans_&aar..csv" 
+            OUTFILE= "&path_out.\sampling_trans_&aar..csv" 
             DBMS=CSV LABEL REPLACE;
 RUN;
 
