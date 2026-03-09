@@ -62,6 +62,10 @@ if ald>70 then ald=.;
 if otolithReadingRemark = 'D' then ald = .;
 if aar=2017 and togt='GUDP-VIND' and stat in ('402','404','405') then delete;
 
+if aar=2025 and togt='IN-FISKER' and tur='89' and stat='1' then delete; *This is a herring only haul, which is very rare and due to alle
+the herrings it get overreprented in the estimates. This could be fixed by stratifing the hauls per target species, but I don't have time
+for that, so this is a quick fix;
+
 run;
 
 data sbr; set silbrs(where=(area ne 'UUUUU'));
