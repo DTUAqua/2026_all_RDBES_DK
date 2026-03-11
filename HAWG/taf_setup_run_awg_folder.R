@@ -21,6 +21,14 @@ draft.data(data.files = "template",
            access = "Public",
            append = F)
 
+draft.data(data.files = "data_call",
+           data.scripts = NULL,
+           originator = "Data call and SC's",
+           title = "ICES data call with templates",
+           file = T,
+           access = "Public",
+           append = F)
+
 # mkdir("boot/initial/data/template_submitted_last_year")
 
 draft.data(data.files = "template_submitted_last_year",
