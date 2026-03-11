@@ -1,7 +1,7 @@
 
 library(RODBC)
 
-years <- c(2023:2025)
+years <- c(2024:2026)
 
 channel <- odbcConnect("FishLineDW")
 spr_samples_length <- sqlQuery(channel, paste0("SELECT Sample.sampleId, Sample.tripId, Sample.year, Sample.cruise, Sample.trip, Sample.tripType, Sample.station, Sample.stationName, Sample.labJournalNum, Sample.gearQuality, Sample.hydroStnRef, Sample.haulType, Sample.dateGearStart, 
@@ -32,6 +32,6 @@ spr_samples_age <- sqlQuery(channel, paste("SELECT Sample.sampleId, Sample.tripI
 
 close(channel)
 
-save(spr_samples_length, file = "spr_samples_length.RData")
-save(spr_samples_age, file = "spr_samples_age.RData")
+save(spr_samples_length, file = "data/spr.27.3a4/spr_samples_length.RData")
+save(spr_samples_age, file = "data/spr.27.3a4/spr_samples_age.RData")
 
