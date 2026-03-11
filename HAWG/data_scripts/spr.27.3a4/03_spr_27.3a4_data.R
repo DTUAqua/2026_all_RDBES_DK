@@ -3,15 +3,14 @@
 ## Before:
 ## After:
 
-library(icesTAF)
 library(dplyr)
 
-mkdir("data")
-
+getwd()
+# setwd("./HAWG")
 
 # Prepare landings ----
 
-load("boot/data/spr_dfad/spr_dfad.Rdata")
+load("data/spr.27.3a4/spr_dfad.Rdata")
 
 unique(spr_dfad$fao_area)
 unique(spr_dfad$year)
@@ -21,7 +20,7 @@ spr.27.3a4_lan <-
   subset(spr_dfad,
          fao_area %in% c("27.3.a.20", "27.3.a.21", "27.4.a", "27.4.b", "27.4.c"))
 
-save(spr.27.3a4_lan, file = "data/spr.27.3a4_lan.Rdata")
+save(spr.27.3a4_lan, file = "data/spr.27.3a4/spr.27.3a4_lan.Rdata")
 
 # Prepare sample data ----
 ## Get relations
@@ -31,7 +30,7 @@ load("boot/data/fl_area_relation/fl_area_relation.Rdata")
 ## Lengths ----
 ### Filter data
 
-load("boot/data/spr_samples/spr_samples_length.Rdata")
+load("data/spr.27.3a4/spr_samples_length.Rdata")
 
 spr_samples_length_1 <-
   left_join(spr_samples_length, fl_area_relation, by = c("dfuArea" = "DFUArea"))
@@ -64,12 +63,12 @@ spr.27.3a4_samples_length <-
 test_scm <- distinct(spr.27.3a4_samples_length, length, length_scm)
 test_date <- distinct(spr.27.3a4_samples_length, dateGearEnd, date)
 
-save(spr.27.3a4_samples_length, file = "data/spr.27.3a4_samples_length.Rdata")
+save(spr.27.3a4_samples_length, file = "data/spr.27.3a4/spr.27.3a4_samples_length.Rdata")
 
 ## Ages ----
 ### Filter data
 
-load("boot/data/spr_samples/spr_samples_age.Rdata")
+load("data/spr.27.3a4/spr_samples_age.Rdata")
 
 spr_samples_age_1 <-
   left_join(spr_samples_age, fl_area_relation, by = c("dfuArea" = "DFUArea"))
@@ -102,4 +101,4 @@ test_scm <- distinct(spr.27.3a4_samples_age, length, length_scm)
 test_date <- distinct(spr.27.3a4_samples_age, dateGearEnd, date)
 test_age_plus <- distinct(spr.27.3a4_samples_age, age, age_plus)
 
-save(spr.27.3a4_samples_age, file = "data/spr.27.3a4_samples_age.Rdata")
+save(spr.27.3a4_samples_age, file = "data/spr.27.3a4/spr.27.3a4_samples_age.Rdata")
