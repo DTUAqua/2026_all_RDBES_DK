@@ -1,9 +1,9 @@
 
 %let path_repo = C:\Users\kibi\OneDrive - Danmarks Tekniske Universitet\2026_all_RDBES_DK;
 %let awg = HAWG;
-libname out "&path_repo.\&awg.\data\original_sas";
-%let path_out = &path_repo.\&awg.\data\original_sas;
-%let path_square = &path_repo.\&awg.\boot\data\template_square_list;
+%let stock = spr.27.3a4;
+libname out "&path_repo.\&awg.\data\original_sas\&stock.";
+%let path_out = &path_repo.\&awg.\data\original_sas\&stock.;
 
 *20190311 - raisingfactor not included in calculating number and weight for the rep;
 
