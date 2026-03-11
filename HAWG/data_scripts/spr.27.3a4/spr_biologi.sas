@@ -1,7 +1,9 @@
 
-libname out 'Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\national_AWG_BM_submissions\2025_all_RDBES_DK\HAWG\boot\data\spr_biologi';
-
-%let path_out = Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\national_AWG_BM_submissions\2025_all_RDBES_DK\HAWG\boot\data\spr_biologi;
+%let path_repo = C:\Users\kibi\OneDrive - Danmarks Tekniske Universitet\2026_all_RDBES_DK;
+%let awg = HAWG;
+libname out "&path_repo.\&awg.\data\original_sas";
+%let path_out = &path_repo.\&awg.\data\original_sas;
+%let path_square = &path_repo.\&awg.\boot\data\template_square_list;
 
 *20190311 - raisingfactor not included in calculating number and weight for the rep;
 
@@ -107,12 +109,12 @@ proc sql;
 create table no_age as
 select year, cruise, dfuarea, sum(number) as no_fish
 from age
-where speciescode = 'BRS' and year in (2024)
+where speciescode = 'BRS' and year in (2024, 2025)
 group by year, cruise, dfuarea;
 
 proc sql;
 create table no_length as
 select year, cruise, dfuarea, sum(number) as no_fish
 from length
-where speciescode = 'BRS' and year in (2024)
+where speciescode = 'BRS' and year in (2024, 2025)
 group by year, cruise, dfuarea;
