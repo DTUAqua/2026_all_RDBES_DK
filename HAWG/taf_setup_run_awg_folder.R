@@ -11,7 +11,7 @@ library(icesTAF)
 # getwd()
 
 # Boot  ----
-mkdir("boot/initial/data/template")
+# mkdir("boot/initial/data/template")
 
 draft.data(data.files = "template",
            data.scripts = NULL,
@@ -21,7 +21,7 @@ draft.data(data.files = "template",
            access = "Public",
            append = F)
 
-mkdir("boot/initial/data/template_submitted_last_year")
+# mkdir("boot/initial/data/template_submitted_last_year")
 
 draft.data(data.files = "template_submitted_last_year",
            data.scripts = NULL,
@@ -33,10 +33,10 @@ draft.data(data.files = "template_submitted_last_year",
 
 
 draft.data(data.files = NULL,
-           data.scripts = "survey_indices_ALK_data_from_commercial",
+           data.scripts = "fl_area_relation",
            originator = "FishLine",
-           title = "Commercial single fish information from area 22-24 for survey indicies",
-           access = "Public",
+           title = "Area relation from FishLine",
+           access = "Restricted",
            file = T,
            append = T)
 
