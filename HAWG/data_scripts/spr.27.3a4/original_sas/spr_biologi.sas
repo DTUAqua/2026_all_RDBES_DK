@@ -109,12 +109,12 @@ proc sql;
 create table no_age as
 select year, cruise, dfuarea, sum(number) as no_fish
 from age
-where speciescode = 'BRS' and year in (2024, 2025)
+where speciescode = 'BRS' and year in (2024, 2025, 2026)
 group by year, cruise, dfuarea;
 
 proc sql;
 create table no_length as
 select year, cruise, dfuarea, sum(number) as no_fish
 from length
-where speciescode = 'BRS' and year in (2024, 2025)
+where speciescode = 'BRS' and year in (2024, 2025, 2026)
 group by year, cruise, dfuarea;
