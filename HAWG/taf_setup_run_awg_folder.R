@@ -6,47 +6,38 @@ library(icesTAF)
 
 # getwd()
 # 
-# setwd("./HAWG")
+# setwd("./WGBFAS") - WD needs to be in AWG folder
 # 
 # getwd()
 
 # Boot  ----
-# mkdir("boot/initial/data/template")
-
-draft.data(data.files = "template",
-           data.scripts = NULL,
-           originator = "Data call and SC's",
-           title = "Copy of HAWG templates",
-           file = T,
-           access = "Public",
-           append = F)
 
 draft.data(data.files = "data_call",
            data.scripts = NULL,
-           originator = "Data call and SC's",
+           originator = "Data call and tamplates",
            title = "ICES data call with templates",
            file = T,
            access = "Public",
            append = F)
 
-# mkdir("boot/initial/data/template_submitted_last_year")
-
-draft.data(data.files = "template_submitted_last_year",
+draft.data(data.files = "fleet_relation",
            data.scripts = NULL,
            originator = "DTU Aqua",
-           title = "Template with DNK data submitted last year",
+           title = "Fleet relation", 
+           source = "Q:/50-radgivning/02-mynd/SAS Library/fleet",
+           file = T,
+           access = "Public",
+           append = T)
+
+draft.data(data.files = "official_lan_bms_from_fst",
+           data.scripts = NULL,
+           originator = "LFST",
+           title = "Copy of of official landings and BMS sent to ICES by LFST",
            file = T,
            access = "Restricted",
            append = T)
 
 
-draft.data(data.files = NULL,
-           data.scripts = "fl_area_relation",
-           originator = "FishLine",
-           title = "Area relation from FishLine",
-           access = "Restricted",
-           file = T,
-           append = T)
 
 taf.boot()
 
