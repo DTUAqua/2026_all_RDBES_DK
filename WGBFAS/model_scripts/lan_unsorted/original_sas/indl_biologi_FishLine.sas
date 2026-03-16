@@ -3,9 +3,9 @@ options nocenter label missing=' ' pagesize=70 linesize=120;
 %let prg_navn=indl_biologi.sas;
 
 %let path_repo = C:\Users\kibi\OneDrive - Danmarks Tekniske Universitet\2026_all_RDBES_DK;
-%let awg = HAWG;
-libname spr "&path_repo.\&awg.\data\original_sas";
-%let path_out = &path_repo.\&awg.\data\original_sas;
+%let awg = WGBFAS;
+libname spr "&path_repo.\&awg.\model\lan_unsorted\original_sas";
+%let path_out = &path_repo.\&awg.\model\lan_unsorted\original_sas;
 
 %let aar=2025;
 
