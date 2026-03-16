@@ -10,10 +10,10 @@ libname lplads 'Q:\50-radgivning\02-mynd\SAS Library\Lplads';
 libname library 'Q:\50-radgivning\02-mynd\Formater\Formater_94';
 
 %let path_repo = C:\Users\kibi\OneDrive - Danmarks Tekniske Universitet\2026_all_RDBES_DK;
-%let awg = HAWG;
-libname out "&path_repo.\&awg.\data\original_sas";
-%let path_out = &path_repo.\&awg.\data\original_sas;
-%let path_square = &path_repo.\&awg.\boot\data\template_square_list;
+%let awg = WGBFAS;
+libname out "&path_repo.\&awg.\model\unsorted_lan\original_sas";
+%let path_out = &path_repo.\&awg.\model\unsorted_lan\original_sas;
+*%let path_square = &path_repo.\&awg.\boot\data\template_square_list;
 
 %let year=2025;
 
@@ -278,7 +278,7 @@ RUN;
 data out.lan_&year.;
 set data8;
 run;
-
+/*
 	proc sql;
 	create table areas as 
 	select distinct ff_area
