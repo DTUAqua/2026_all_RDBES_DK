@@ -490,6 +490,12 @@ end;
 if aar=2025 and area='4b' and art='SIL' and kat='IND' and kv=3 and lgdcm=11 then do;
   kat='KON'; kv=2; manual_imp = 'yes'; output;
 end;
+if aar=2025 and area='28' and art='BRS' and kat='IND' and kv=1 and lgdcm=8 then do;
+  lgdcm=7; manual_imp = 'yes'; output;
+end;
+if aar=2025 and area='29' and art='BRS' and kat='IND' and kv=1 and lgdcm=7 then do;
+  lgdcm=6; manual_imp = 'yes'; output;
+end;
 
 proc sort data=an2; by aar area kv kat art lgdcm;
 run;
