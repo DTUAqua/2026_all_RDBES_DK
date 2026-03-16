@@ -1,18 +1,18 @@
 
 *InterCatch file based on HAWG output;
 
-libname input 'Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\HAWGOutput\SASData';
+libname input 'C:\Users\kibi\OneDrive - Danmarks Tekniske Universitet\2026_all_RDBES_DK\WGBFAS\model\lan_unsorted\original_sas';
 libname library 'Q:\50-radgivning\02-mynd\Formater\Formater_94';
 
 %let WG='WGBFAS';*'HAWG-NS-HER';*'HAWG'; *'WGBFAS'; *'HAWG-SPR';
-%let year=2024;
-%let name=HAWG;
+%let year=2025;
+%let name=WGBFAS;
 %let usage='NA';
 %let countryname=DNK;
 %let country='DK';
-%let type=WGBFAS-SPR;
+%let type=spr.27.22-32;
 %let species='BRS';
-%let path=Q:\50-radgivning\02-mynd\Assessement_discard_and_the_like\WG\HAWG\wg2025\interCatch;
+%let path=C:\Users\kibi\OneDrive - Danmarks Tekniske Universitet\2026_all_RDBES_DK\WGBFAS\output\intercatch;
 
 data canum;
 set input.canum_&year.;
