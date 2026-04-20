@@ -1,0 +1,263 @@
+---
+title: "report_test"
+author: "Kirsten Birch Håkansson, DTU Aqua"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning = F, message = F)
+
+library(dplyr)
+library(ggplot2)
+
+options(scipen = 999)
+
+col_area <- c("#1170aa", "#fc7d0b", "#a3acb9", "#a3cce9",
+          "#5fa2ce", "#c85200", "#ffbc79", "#c8d0d9", "magenta")
+
+```
+
+# Steps
+
+1.  Samme input data og metode fra regneark omskrevet til R. Jeg har ændret en lille smule i metoden, se under Step 1, Metode
+
+2.  Nye datakilder, men samme metode
+
+    1.  Sammenlign data
+
+    2.  Sammenlign resultater
+
+3.  Medtager alle vægte, også hvis der ikke er en længdefordeling
+
+4.  Korrigere STO med 1.13 i indsamlingerne
+
+5.  (
+
+## Opdateringer side mandag 14042025
+Generelt: Har prøvet at 
+
+1.  Inkluderet 0 landinger i input data, så kvartal 2 2022 nu kommer i 0 og ikke er NA
+2.  Ingen opdateringer i metoden
+3. 
+
+## Konklusion
+
+1.   
+
+# Step 1
+
+## Input
+
+"rejer_square_1987t2024_3.csv" & "Pandalus_Stations_LD_2007_2023.csv"
+
+Medtager kun data fra og med 2020
+
+```{r step_1_get_data, echo = F}
+pop_1 <- read.csv("NIPAG/boot/data/old_boot_data/rejer_square_2024_3.csv")
+pop_2 <- read.csv("NIPAG/boot/data/old_boot_data/rejer_square_2025_kv1_3.csv")
+pop <- rbind(pop_1, pop_2)
+pop <- subset(pop, year >= 2020)
+# 
+# dummy <- distinct(pop, year, dfadfvd_ret, area, art, ltilst, kategori, metier)
+# dummy_q <- distinct(pop, quarter)
+# dummy_0 <- cross_join(dummy, dummy_q)
+# dummy_0$kg <- 0
+# 
+# pop <- bind_rows(pop, dummy_0)
+
+samp <- read.csv("NIPAG/boot/data/old_boot_data/Pandalus_Stations_LD_2007_2025.csv")
+samp <- subset(samp, aar >= 2020)
+
+# rm(dummy, dummy_q, dummy_0)
+```
+
+## Filter input
+
+Baseret på "Protocol for extraction of DK data for Pra.27.3a4a ensemble model (post 2022-bm).docx"
+
+I de senere år anvendes der kun data fra "Pandalus_Stations_LD_2007_2023.csv". "Pandalus_Stations_spWeights_2007_2023.csv' anvendes ikke
+
+```{r step_1_filter, include = F}
+
+# pop ----
+unique(pop$area)
+pop_1 <- subset(pop, area %in% c("", "IIIa", "IVa"))
+
+unique(pop_1$dfadfvd_ret)
+pop_2 <- subset(pop_1, dfadfvd_ret %in% c("3AN", "3AS", "4A", "4B"))
+
+pop <- pop_2
+rm(pop_1, pop_2)
+
+pop$area_stock <- "3a"
+pop$area_stock[pop$dfadfvd_ret %in% c("4A", "4B")] <- "4ab"
+distinct(pop, dfadfvd_ret, area_stock)
+
+# Samp ---
+unique(samp$fu)
+samp_1 <- subset(samp, !(fu %in% c("Andre sq i IVa-c", "Fladen" )))
+
+samp <- samp_1
+rm(samp_1)
+
+samp$year <- samp$aar
+samp$quarter <- samp$kv
+
+samp$kategori <- "Fersk"
+samp$kategori[samp$sizeSortingDFU == "STO"] <- "Kogt"
+distinct(samp, kat, sizeSortingDFU, kategori)
+
+
+```
+
+## Method
+
+Omskriving af udregningerne til R. Omskrivning følger rækkerne i regnearket, så det er muligt at tjekke undervejs.
+
+**OBS** - jeg følger metoden, undtagen for længdefordelingen af den korrigerede discard, da jeg synes det er underligt at den anvender den ukorrigerede discard til længdefordeligen. For de kogte rejer anvendes de korrigerede landinger. Dette betyder at for discarden korrigeres gennemsnitvægten, mens det er antallet der korrigeres for de kogte landede.
+
+```{r, echo = F}
+# Første række ----
+## Hovedsagligt for tjek
+## Landinger
+lan <- summarise(group_by(pop, area_stock, year, quarter, kategori),
+                     lan_tons = sum(kg/1000, na.rm = T))
+
+## Prøvevægt
+samp_wt <- distinct(samp, year, quarter, togt, tur, stat, kat, kategori,
+                    kg_pr_time)
+
+samp_wt_sum <- summarise(group_by(samp_wt, year, quarter, kat, kategori),
+                     kg_pr_time = sum(kg_pr_time, na.rm = T))
+
+## Discard
+lan_for_dis <- summarise(group_by(lan, area_stock, year, quarter),
+                     lan_tons = sum(lan_tons, na.rm = T))
+
+samp_wt_sum_dis_ratio <- summarise(group_by(samp_wt, year, quarter, kat),
+                     kg_pr_time = sum(kg_pr_time, na.rm = T))
+
+samp_wt_sum_dis_ratio_t <- tidyr::spread(samp_wt_sum_dis_ratio, 
+                                  key = kat, value = kg_pr_time,
+                                  fill = 0)
+samp_wt_sum_dis_ratio_t$dis_ratio <- samp_wt_sum_dis_ratio_t$DIS / samp_wt_sum_dis_ratio_t$KON 
+
+dis <- left_join(lan_for_dis, samp_wt_sum_dis_ratio_t)
+
+dis$dis_tons <- dis$lan_tons * dis$dis_ratio
+
+
+## Antal per længde
+samp_n_len <- summarise(group_by(samp, year, quarter, kat, kategori,
+                                 lgd),
+                        n_pr_time = sum(n_pr_time, na.rm = T))
+
+
+# Anden række ----
+## Her korrigeres de kogte rejer i landingerne med 1.13
+## Landinger
+unique(pop$kategori)
+pop$kg[pop$kategori == "Kogt"] <- pop$kg[pop$kategori == "Kogt"] * 1.13
+
+lan <- summarise(group_by(pop, area_stock, year, quarter, kategori),
+                     lan_tons = sum(kg/1000, na.rm = T))
+
+## Prøvevægt
+samp_wt <- distinct(samp, year, quarter, togt, tur, stat, kat, kategori,
+                    kg_pr_time)
+
+samp_wt_sum <- summarise(group_by(samp_wt, year, quarter, kat, kategori),
+                     kg_pr_time = sum(kg_pr_time, na.rm = T))
+
+## Discard
+lan_for_dis <- summarise(group_by(lan, area_stock, year, quarter),
+                     lan_tons = sum(lan_tons, na.rm = T))
+
+samp_wt_sum_dis_ratio <- summarise(group_by(samp_wt, year, quarter, kat),
+                     kg_pr_time = sum(kg_pr_time, na.rm = T))
+
+samp_wt_sum_dis_ratio_t <- tidyr::spread(samp_wt_sum_dis_ratio, 
+                                  key = kat, value = kg_pr_time,
+                                  fill = 0)
+samp_wt_sum_dis_ratio_t$dis_ratio <- samp_wt_sum_dis_ratio_t$DIS / samp_wt_sum_dis_ratio_t$KON 
+
+dis <- left_join(lan_for_dis, samp_wt_sum_dis_ratio_t)
+
+dis$dis_tons <- dis$lan_tons * dis$dis_ratio
+
+# Catch
+dis <- select(dis, area_stock, year, quarter, dis_tons)
+
+dis$kategori <- "Fersk"
+dis$kat <- "DIS"
+dis <- rename(dis, tons = dis_tons)
+
+lan$kat <- "KON"
+lan <- rename(lan, tons = lan_tons)
+
+catch <- rbind(lan, dis)
+
+catch_sum <- summarise(group_by(catch, year, quarter, area_stock, kat),
+                      tons = sum(tons, na.rm = T))
+
+catch_sum <- rename(catch_sum, catchCat = kat)
+catch_sum$catchCat[catch_sum$catchCat == "KON"] <- "LAN"
+
+write.table(
+  catch_sum,
+  "NIPAG/report_test/catch_2024_2025q1.csv",
+  sep = ",",
+  row.names = F
+)
+
+## Antal per længde
+### Antal fisk
+
+samp_n_len <- summarise(group_by(samp, year, quarter, kat, kategori,
+                                 lgd),
+                        n_pr_time = sum(n_pr_time, na.rm = T))
+samp_n_len_wt <- left_join(samp_n_len, samp_wt_sum)
+
+catch_n_len_wt <- left_join(catch, samp_n_len_wt)
+
+catch_n_len_wt$number <- (catch_n_len_wt$n_pr_time * catch_n_len_wt$tons) / catch_n_len_wt$kg_pr_time
+
+ld <- catch_n_len_wt
+
+
+ld_sum <- summarise(group_by(ld, year, quarter, area_stock, kat, lgd),
+                      number = sum(number, na.rm = T))
+
+ld_sum <- rename(ld_sum, catchCat = kat)
+ld_sum$catchCat[ld_sum$catchCat == "KON"] <- "LAN"
+
+
+write.table(
+  ld_sum,
+  "NIPAG/report_test/length_distribution_2024_2025q1.csv",
+  sep = ",",
+  row.names = F
+)
+
+# Sample statistics
+
+samp_stat <- distinct(samp, year, quarter, fu, togt, tur, stat, kat)
+
+samp_stat$area_stock <- "3a"
+samp_stat$area_stock[samp_stat$fu == "Norske Rende"] <- "4ab"
+
+samp_stat_sum <- summarise(group_by(samp_stat, year, quarter, area_stock, kat), no_trips = length(unique(tur)), 
+                           no_hauls = length(unique(stat)))
+
+write.table(
+  samp_stat_sum,
+  "NIPAG/report_test/sample_statistic.csv",
+  sep = ",",
+  row.names = F
+)
+```
