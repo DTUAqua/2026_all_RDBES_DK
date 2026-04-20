@@ -1,5 +1,5 @@
 ---
-title: "report_test"
+title: "estimating"
 author: "Kirsten Birch Håkansson, DTU Aqua"
 date: "`r Sys.Date()`"
 output:
@@ -58,8 +58,8 @@ Generelt: Har prøvet at
 Medtager kun data fra og med 2020
 
 ```{r step_1_get_data, echo = F}
-pop_1 <- read.csv("NIPAG/boot/data/old_boot_data/rejer_square_2024_3.csv")
-pop_2 <- read.csv("NIPAG/boot/data/old_boot_data/rejer_square_2025_kv1_3.csv")
+pop_1 <- read.csv("C:/Users/kibi/OneDrive - Danmarks Tekniske Universitet/2026_all_RDBES_DK/NIPAG/boot/data/data_old_format/rejer_square_2025_3.csv")
+pop_2 <- read.csv("C:/Users/kibi/OneDrive - Danmarks Tekniske Universitet/2026_all_RDBES_DK/NIPAG/boot/data/data_old_format/rejer_square_2026_kv1_3.csv")
 pop <- rbind(pop_1, pop_2)
 pop <- subset(pop, year >= 2020)
 # 
@@ -70,7 +70,7 @@ pop <- subset(pop, year >= 2020)
 # 
 # pop <- bind_rows(pop, dummy_0)
 
-samp <- read.csv("NIPAG/boot/data/old_boot_data/Pandalus_Stations_LD_2007_2025.csv")
+samp <- read.csv("C:/Users/kibi/OneDrive - Danmarks Tekniske Universitet/2026_all_RDBES_DK/NIPAG/boot/data/data_old_format/Pandalus_Stations_LD_2007_2026.csv")
 samp <- subset(samp, aar >= 2020)
 
 # rm(dummy, dummy_q, dummy_0)
@@ -210,7 +210,7 @@ catch_sum$catchCat[catch_sum$catchCat == "KON"] <- "LAN"
 
 write.table(
   catch_sum,
-  "NIPAG/report_test/catch_2024_2025q1.csv",
+  "C:/Users/kibi/OneDrive - Danmarks Tekniske Universitet/2026_all_RDBES_DK/NIPAG/model/catch_2025_2026q1.csv",
   sep = ",",
   row.names = F
 )
@@ -239,7 +239,7 @@ ld_sum$catchCat[ld_sum$catchCat == "KON"] <- "LAN"
 
 write.table(
   ld_sum,
-  "NIPAG/report_test/length_distribution_2024_2025q1.csv",
+  "C:/Users/kibi/OneDrive - Danmarks Tekniske Universitet/2026_all_RDBES_DK/NIPAG/model/length_distribution_2025_2026q1.csv",
   sep = ",",
   row.names = F
 )
@@ -256,7 +256,7 @@ samp_stat_sum <- summarise(group_by(samp_stat, year, quarter, area_stock, kat), 
 
 write.table(
   samp_stat_sum,
-  "NIPAG/report_test/sample_statistic.csv",
+  "C:/Users/kibi/OneDrive - Danmarks Tekniske Universitet/2026_all_RDBES_DK/NIPAG/model/sample_statistic.csv",
   sep = ",",
   row.names = F
 )
