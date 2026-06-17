@@ -1,0 +1,8 @@
+{
+  "bundle": "t004_age_length_key_arrays",
+  "source_file": "HAWG/data_scripts/her.27.20-24/original_sas/indl_biologi_FishLine.sas",
+  "source_blob_sha": "ee2e4059dd044ed0eb318fe1bff9c56a8831e650",
+  "source_commit": "f69b16ed6d3dbed3e83ede2f5550116c39d7e231",
+  "tier": "mock_data",
+  "notes": "Age-length-key construction slice of the her.27.20-24 CANUM pipeline. The ODBC FishLineDW pull and upstream recoding are replaced by an inline `sbr` sample with the columns these steps read. The an2 step accumulates numbers-aged into an a0-a11 array with RETAIN and FIRST./LAST. per length class, the Baltic age-plus-group cap, then PROC SUMMARY rolls the key up and PROC TRANSPOSE pivots it to long form -- all run unchanged."
+}

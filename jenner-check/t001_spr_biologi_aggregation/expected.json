@@ -1,0 +1,14 @@
+{
+  "_captured_at": "2026-06-17T06:40:00Z",
+  "_captured_run_id": "r_019ed44bff2a7a22bc4beaecfe966f47",
+  "status": "ok",
+  "exit_code": 0,
+  "log_contains": [
+    "NOTE: Wrote length (8 rows, 9 columns).",
+    "NOTE: Wrote out.age_including_survey (7 rows, 9 columns).",
+    "NOTE: Table no_length created.",
+    "NOTE: PROC PRINT completed: 6 observations printed, 4 variables"
+  ],
+  "log_does_not_contain": ["ERROR:", "[JENNER-ERROR"],
+  "diagnostics": {"parse_warnings": [], "runtime_warnings": []}
+}

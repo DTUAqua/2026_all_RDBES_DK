@@ -1,0 +1,9 @@
+                          WGBFAS InterCatch input: sprat (SPR) catch-at-age, ICES Subdivisions                          
+
+ AAR  KV  SPECIES      AREA1  AREATYPE             FLEET  AGE    KG  ANTAL  STK_A_1000
+2025   1  SPR      27.3.c.22  SubDiv    Pelagic trawlers    1  1500     80          96
+2025   1  SPR      27.3.c.22  SubDiv    Pelagic trawlers    2  1500     50          60
+2025   2  SPR      27.3.d.24  SubDiv    Pelagic trawlers    1  2200    130          84
+2025   2  SPR      27.3.d.24  SubDiv    Pelagic trawlers    2  2200     90          58
+2025   3  SPR      27.3.d.25  SubDiv    Pelagic trawlers    1  1800     70          81
+

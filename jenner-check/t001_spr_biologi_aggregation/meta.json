@@ -1,0 +1,8 @@
+{
+  "bundle": "t001_spr_biologi_aggregation",
+  "source_file": "HAWG/data_scripts/spr.27.3a4/original_sas/spr_biologi.sas",
+  "source_blob_sha": "c629a5f63132fb58762b0e2067e86d27c06468c5",
+  "source_commit": "f69b16ed6d3dbed3e83ede2f5550116c39d7e231",
+  "tier": "mock_data",
+  "notes": "Sprat (BRS) length/age sample processing for her.27.3a4. The two ODBC PROC SQL pulls from FishLineDW are replaced by small inline length/age tables carrying the columns the downstream steps read; the landingCategory recoding DATA steps, the age>1000 / otolith-remark filters, the PROC SQL group-by aggregations and PROC EXPORT to semicolon-delimited CSV all run unchanged. Trailing PROC PRINTs added to surface the aggregated counts."
+}

@@ -1,0 +1,10 @@
+Aged (aldret) vs measured (maalt) counts per sample
+
+ aar       togt  tur  stat  art        kat   area  maalt  aldret  pr
+2025  BRS20      31   372   BRS  IND        lllaS     40      38   1
+2025  GUDP-VIND  5    405   SIL  Active<32  22-24     25      22   1
+2025  IN-FISKER  21   360   SIL  Active<32  lllaN     30      28   1
+2025  IN-HIRT    13   408   SIL  PS         22-24     15      12   1
+2025  IN-LYNG    14   410   SIL  NEP        4b        12      10   1
+2025  IN-LYNG    16   411   BRS  IND        25-32     33      30   1
+

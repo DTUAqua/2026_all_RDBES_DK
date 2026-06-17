@@ -1,0 +1,63 @@
+Jenner 0.1.0 (Unlicensed - limited to 100 observations)
+Get a license at https://jenneranalytics.com/license
+
+NOTE: Option OBS changed to 100.
+NOTE: Library OUT assigned path=..
+NOTE: DATA length
+
+NOTE: Processing inline DATALINES (8 lines)
+
+NOTE: Read 8 rows from DATALINES.
+NOTE: Wrote length (8 rows, 9 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA age
+
+NOTE: Processing inline DATALINES (8 lines)
+
+NOTE: Read 8 rows from DATALINES.
+NOTE: Wrote age (8 rows, 9 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA out.length_including_survey
+
+
+NOTE: Read 8 rows from length.
+NOTE: Wrote out.length_including_survey (8 rows, 9 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC SQL 
+
+NOTE: Table check_age_remark created.
+NOTE: PROC SQL statement used.
+NOTE: DATA out.age_including_survey
+
+
+NOTE: Read 8 rows from age.
+NOTE: Wrote out.age_including_survey (7 rows, 9 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC EXPORT data=out.length_including_survey outfile=./length_including_survey.csv
+
+NOTE: Exported 8 rows to ./length_including_survey.csv.
+NOTE: PROC EXPORT data=out.age_including_survey outfile=./age_including_survey.csv
+
+NOTE: Exported 7 rows to ./age_including_survey.csv.
+NOTE: PROC SQL 
+
+NOTE: Table no_age created.
+NOTE: PROC SQL statement used.
+NOTE: PROC SQL 
+
+NOTE: Table no_length created.
+NOTE: PROC SQL statement used.
+NOTE: PROC PRINT data=no_length
+
+NOTE: PROC PRINT completed: 6 observations printed, 4 variables
+NOTE: PROC PRINT data=no_age
+
+NOTE: PROC PRINT completed: 6 observations printed, 4 variables

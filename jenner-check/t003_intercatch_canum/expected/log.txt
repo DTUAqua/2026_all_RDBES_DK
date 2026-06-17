@@ -1,0 +1,42 @@
+Jenner 0.1.0 (Unlicensed - limited to 100 observations)
+Get a license at https://jenneranalytics.com/license
+
+NOTE: Option OBS changed to 100.
+NOTE: DATA canum
+
+NOTE: Processing inline DATALINES (6 lines)
+
+NOTE: Read 6 rows from DATALINES.
+NOTE: Wrote canum (6 rows, 19 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA canum
+
+
+NOTE: Read 6 rows from canum.
+NOTE: Wrote canum (5 rows, 23 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC SQL 
+
+NOTE: Table canum4 created.
+NOTE: PROC SQL statement used.
+NOTE: DATA final_2
+
+
+NOTE: Read 5 rows from canum4.
+NOTE: Wrote final_2 (5 rows, 29 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC SORT data=
+
+NOTE: Unlicensed mode - input limited to 100 observations.
+NOTE: Read 5 rows from .
+NOTE: Wrote  (5 rows, 29 columns).
+NOTE: PROC SORT statement used.
+NOTE: PROC PRINT data=final_2
+
+NOTE: PROC PRINT completed: 5 observations printed, 10 variables
