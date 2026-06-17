@@ -1,0 +1,43 @@
+Age-length key: numbers aged per length class (a0-a11) and class total
+
+ aar  area  kv  kat  art  lgdcm  a0  a1  a2  a3  a4  totaldret
+2025  22     4  IND  BRS      8   0  33  21   0   0         54
+2025  22     4  IND  BRS      9   0  14   0   0   0         14
+2025  4aw    1  KON  SIL     30   0   0  15  28   0         43
+2025  4aw    1  KON  SIL     31   0   0   0   0  12         12
+2025  4b     3  IND  SIL     18  12  30  18   0   0         60
+2025  4b     3  IND  SIL     20   0  22   0  41   0         63
+
+Age-length key rolled up to year/area/quarter/category/species
+
+ AAR  AREA  KV  KAT  ART  A0  A1  A2  A3  A4  TOTALDRET
+2025  22     4  IND  BRS   0  47  21   0   0         68
+2025  4aw    1  KON  SIL   0   0  15  28  12         55
+2025  4b     3  IND  SIL  12  52  18  41   0        123
+
+Age-length key in long form (one row per length class x age group)
+
+ AAR  AREA  KV  KAT  ART  LGDCM  AGEGROUP  NAGED
+2025  22     4  IND  BRS      8  a0            0
+2025  22     4  IND  BRS      8  a1           33
+2025  22     4  IND  BRS      8  a2           21
+2025  22     4  IND  BRS      8  a3            0
+2025  22     4  IND  BRS      8  a4            0
+2025  22     4  IND  BRS      8  a5            0
+2025  22     4  IND  BRS      8  a6            0
+2025  22     4  IND  BRS      8  a7            0
+2025  22     4  IND  BRS      8  a8            0
+2025  22     4  IND  BRS      8  a9            0
+2025  22     4  IND  BRS      8  a10           0
+2025  22     4  IND  BRS      8  a11           0
+2025  22     4  IND  BRS      9  a0            0
+2025  22     4  IND  BRS      9  a1           14
+2025  22     4  IND  BRS      9  a2            0
+2025  22     4  IND  BRS      9  a3            0
+2025  22     4  IND  BRS      9  a4            0
+2025  22     4  IND  BRS      9  a5            0
+2025  22     4  IND  BRS      9  a6            0
+2025  22     4  IND  BRS      9  a7            0
+
+... 52 more observations (showing 20 of 72)
+

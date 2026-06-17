@@ -1,0 +1,14 @@
+{
+  "_captured_at": "2026-06-17T06:42:00Z",
+  "_captured_run_id": "r_019ed44d9df577628cdbfd232bd6166a",
+  "status": "ok",
+  "exit_code": 0,
+  "log_contains": [
+    "NOTE: Wrote silbrs1 (8 rows",
+    "NOTE: Wrote mford (6 rows",
+    "NOTE: Wrote tford (6 rows, 15 columns).",
+    "NOTE: PROC PRINT completed: 6 observations printed, 10 variables"
+  ],
+  "log_does_not_contain": ["ERROR:", "[JENNER-ERROR"],
+  "diagnostics": {"parse_warnings": [], "runtime_warnings": []}
+}

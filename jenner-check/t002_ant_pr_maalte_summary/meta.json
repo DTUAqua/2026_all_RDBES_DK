@@ -1,0 +1,8 @@
+{
+  "bundle": "t002_ant_pr_maalte_summary",
+  "source_file": "HAWG/data_scripts/her.27.20-24/original_sas/ant_pr_maalte_aldret_kon_ind_brs_sil.sas",
+  "source_blob_sha": "d33eb8e94d4f4410ba4e3ffad334cd3d1336265a",
+  "source_commit": "f69b16ed6d3dbed3e83ede2f5550116c39d7e231",
+  "tier": "mock_data",
+  "notes": "Herring/sprat (SIL/BRS) aged-vs-measured counts per sample, her.27.20-24. The ODBC FishLineDW pull is replaced by an inline silbrs1 sample; the derived columns the SQL pass-through computed (area via $om. format, ICES rectangle parsed to a/b, vgt, n3sq) are reproduced in the DATA step with the original SAS expressions. The $om. PROC FORMAT, the kat/area recoding by gear and mesh, PROC SUMMARY (NWAY/CLASS/ID/VAR/OUTPUT), PROC SORT and the MERGE all run unchanged. dato/kv made deterministic for reproducibility."
+}

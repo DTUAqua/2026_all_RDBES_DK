@@ -1,0 +1,8 @@
+{
+  "bundle": "t003_intercatch_canum",
+  "source_file": "WGBFAS/output_scripts/lan_unsorted/InterCatch_based_on_HAWG_outputs.sas",
+  "source_blob_sha": "27655b910ccac0e3206a920f27c900b11c01c5dd",
+  "source_commit": "f69b16ed6d3dbed3e83ede2f5550116c39d7e231",
+  "tier": "mock_data",
+  "notes": "WGBFAS InterCatch input build for sprat (spr.27.22-32). The input.canum_2025 libname dataset is replaced by an inline canum sample carrying the columns the step consumes. The DTU->ICES area-code mapping, the macro-driven (&WG.=WGBFAS) fleet/area filtering (which drops the North Sea 4a row, keeping only Baltic subdivisions), the PROC SQL roll-up by fleet/area/quarter/age, PROC SORT into InterCatch record order, and the BRS->SPR species mapping all run unchanged; the catch-at-age table is printed."
+}
